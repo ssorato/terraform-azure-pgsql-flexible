@@ -72,6 +72,21 @@ resource "azurerm_network_interface_security_group_association" "vm_nic_nsg" {
   network_security_group_id = azurerm_network_security_group.vm_nsg.id
 }
 
+data "template_file" "config_tp" {
+  template = "${file("files/cloud_init.tpl")}"
+}
+
+data "template_cloudinit_config" "config_agent" {                               
+  gzip = true                                                                   
+  base64_encode = true                                                          
+                                                                                
+  part {
+    filename     = "init.cfg"
+    content_type = "text/cloud-config"
+    content      = data.template_file.config_tp.rendered
+  }                                                                       
+}
+
 resource "azurerm_linux_virtual_machine" "vm" {
   name                  = var.vm_parameters.name
   location              = data.azurerm_resource_group.azure_rg.location
@@ -98,6 +113,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   computer_name                   = var.vm_parameters.name
   admin_username                  = var.vm_parameters.admin_username
   disable_password_authentication = true
+  custom_data                     = data.template_cloudinit_config.config_agent.rendered
 
   admin_ssh_key {
       username    = var.vm_parameters.admin_username

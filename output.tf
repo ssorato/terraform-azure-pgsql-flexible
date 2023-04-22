@@ -1,8 +1,8 @@
-output "azurerm_postgresql_flexible_server_name" {
+output "pgsql_name" {
   value = azurerm_postgresql_flexible_server.pgsql_flexible.name
 }
 
-output "postgresql_flexible_server_database_name" {
+output "db_name" {
   value = azurerm_postgresql_flexible_server_database.pgsql_flexible_db[0].name
 }
 
