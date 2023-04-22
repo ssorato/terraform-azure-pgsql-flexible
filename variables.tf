@@ -26,8 +26,9 @@ variable "common_tags" {
   type        = map(string)
   description = "Common tags"
   default     = {
-      created_by = "terraform-pgsql-flexible"
-      sandbox    = "devops"
+      created_by  = "terraform-pgsql-flexible"
+      sandbox     = "devops"
+      environment = "dev"
   }
 }
 
@@ -70,5 +71,20 @@ variable "vm_parameters" {
     ssh_public_key_file = optional(string,"~/.ssh/id_rsa.pub")
   })
   description     = "Vitual machine parameters"
+  default         = null
+}
+
+variable "aks_parameters" {
+  type = object({
+    subnet_name             = optional(string, "subnet-sandbox-devops")
+    name                    = string
+    admin_username          = optional(string,"sandbox")
+    ssh_public_key_file     = optional(string,"~/.ssh/id_rsa.pub")
+    kubernetes_version      = optional(string,"1.25.6")
+    defaultpool_vm_sku      = optional(string,"Standard_B2s")
+    defaultpool_node_count  = optional(number,1)
+    os_disk_size_gb         = optional(number,30)
+  })
+  description     = "AKS parameters"
   default         = null
 }

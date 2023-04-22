@@ -13,6 +13,12 @@ data "azurerm_subnet" "vm_subnet" {
   name                  = var.vm_parameters.subnet_name
 }
 
+data "azurerm_subnet" "aks_subnet" {
+  resource_group_name   = var.rg_name
+  virtual_network_name  = var.vnet_name
+  name                  = var.aks_parameters.subnet_name
+}
+
 resource "azurerm_subnet" "subnet_pgsql_flexible" {
   name                 = var.subnet_pgsql_flexible_name
   virtual_network_name = data.azurerm_virtual_network.rg_vnet.name
